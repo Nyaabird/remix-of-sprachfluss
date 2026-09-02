@@ -192,7 +192,7 @@ async function buildBatch(batch: { file: string; name: string; startOrder: numbe
   let orderIndex = batch.startOrder;
 
   for (const lesson of lessons) {
-    const id = `gen_${lesson.slug}_${Math.random().toString(36).slice(2, 10)}`;
+    const id = `gen_${batch.name}_${lesson.slug}`;
     sql += `INSERT INTO public.lessons (id, slug, level, title, title_de, theme, summary, order_index) VALUES `;
     sql += `(${escapeSql(id)}, ${escapeSql(lesson.slug)}, ${escapeSql(lesson.level)}, ${escapeSql(lesson.title)}, ${escapeSql(lesson.de)}, ${escapeSql(lesson.theme)}, ${escapeSql(lesson.summary)}, ${orderIndex}) ON CONFLICT (slug) DO UPDATE SET level = EXCLUDED.level, title = EXCLUDED.title, title_de = EXCLUDED.title_de, theme = EXCLUDED.theme, summary = EXCLUDED.summary, order_index = EXCLUDED.order_index;\n`;
     sql += exerciseRows(id, lesson, orderIndex * 100).join("\n");

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import { Loading, RequireAuth } from "@/components/require-auth";
-import { fetchAttempts, fetchMastery } from "@/lib/data";
+import { fetchAttempts, fetchExercises, fetchLessons, fetchMastery } from "@/lib/data";
 import {
   DIMENSIONS,
   DIMENSION_BLURB,
@@ -52,8 +52,26 @@ function Progress() {
   const userId = user?.id ?? "";
   const mastery = useQuery({ queryKey: ["mastery", userId], queryFn: () => fetchMastery(userId), enabled: !!userId });
   const attempts = useQuery({ queryKey: ["attempts", userId], queryFn: () => fetchAttempts(userId), enabled: !!userId });
+  const lessons = useQuery({ queryKey: ["lessons"], queryFn: fetchLessons });
+  const exercises = useQuery({ queryKey: ["exercises"], queryFn: () => fetchExercises() });
 
-  if (!mastery.data || !attempts.data) return <Loading label="Crunching your numbers" />;
+  if (!mastery.data || !attempts.data || !lessons.data || !exercises.data)
+    return <Loading label="Crunching your numbers" />;
+
+  const lessonRows = [...lessons.data]
+    .sort((a, b) => a.order_index - b.order_index)
+    .map((lesson) => {
+      const own = exercises.data.filter((e) => e.lesson_id === lesson.id);
+      const tries = attempts.data.filter((a) => a.lesson_id === lesson.id);
+      const answered = new Set(tries.map((a) => a.exercise_id));
+      const done = own.filter((e) => answered.has(e.id)).length;
+      const best = new Map<string, number>();
+      for (const t of tries) best.set(t.exercise_id, Math.max(best.get(t.exercise_id) ?? 0, Number(t.score)));
+      const scores = [...best.values()];
+      const avg = scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : 0;
+      return { lesson, total: own.length, done, avg };
+    });
+  const lessonsCompleted = lessonRows.filter((r) => r.total > 0 && r.done === r.total).length;
 
   const dimensionData = DIMENSIONS.map((d) => ({
     name: DIMENSION_LABEL[d],
@@ -89,9 +107,52 @@ function Progress() {
         <p className="text-xs uppercase tracking-[0.28em] text-primary">Progress</p>
         <h1 className="mt-3 font-serif text-4xl text-cream">Dein Fortschritt</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {totalAttempts} exercises answered · {accuracy}% accurate overall.
+          {totalAttempts} exercises answered · {accuracy}% accurate overall ·{" "}
+          {lessonsCompleted} of {lessonRows.length} lessons finished.
         </p>
       </header>
+
+      <section className="surface rounded-3xl p-7">
+        <h2 className="font-serif text-2xl text-cream">Lesson by lesson</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Exercises answered and your best score in each lesson.
+        </p>
+        <div className="mt-5 space-y-2">
+          {lessonRows.map(({ lesson, total, done, avg }) => {
+            const percent = total ? Math.round((done / total) * 100) : 0;
+            return (
+              <Link
+                key={lesson.id}
+                to="/lesson/$slug"
+                params={{ slug: lesson.slug }}
+                className="flex items-center gap-4 rounded-2xl border border-border/60 px-4 py-3 transition-colors hover:bg-muted/60"
+              >
+                <span className="w-10 shrink-0 text-[11px] uppercase tracking-[0.16em] text-primary/80">
+                  {lesson.level}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-serif text-base text-cream">{lesson.title}</span>
+                  <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-muted">
+                    <span
+                      className="block h-full rounded-full bg-primary transition-all"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </span>
+                </span>
+                <span className="shrink-0 text-right text-xs text-muted-foreground">
+                  <span className="block">
+                    {done}/{total} exercises
+                  </span>
+                  <span className="block font-serif text-base text-secondary">
+                    {done ? `${avg}%` : "—"}
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
 
       <section className="surface rounded-3xl p-7">
         <h2 className="font-serif text-2xl text-cream">By dimension</h2>

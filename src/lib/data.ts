@@ -74,7 +74,7 @@ export async function fetchMastery(userId: string): Promise<MasteryRow[]> {
 export async function fetchAttempts(userId: string) {
   const { data, error } = await supabase
     .from("exercise_attempts")
-    .select("id, exercise_id, lesson_id, is_correct, created_at")
+    .select("id, exercise_id, lesson_id, is_correct, score, created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
   if (error) throw error;

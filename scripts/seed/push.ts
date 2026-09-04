@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
-import { a1Lessons } from "./a1";
-import { a2Lessons } from "./a2";
+import { A1 as a1Lessons } from "./a1";
+import { A2 as a2Lessons } from "./a2";
 import type { LessonSeed } from "./types";
 
 const url = process.env["SUPABASE_URL"]!;

@@ -52,8 +52,26 @@ function Progress() {
   const userId = user?.id ?? "";
   const mastery = useQuery({ queryKey: ["mastery", userId], queryFn: () => fetchMastery(userId), enabled: !!userId });
   const attempts = useQuery({ queryKey: ["attempts", userId], queryFn: () => fetchAttempts(userId), enabled: !!userId });
+  const lessons = useQuery({ queryKey: ["lessons"], queryFn: fetchLessons });
+  const exercises = useQuery({ queryKey: ["exercises"], queryFn: () => fetchExercises() });
 
-  if (!mastery.data || !attempts.data) return <Loading label="Crunching your numbers" />;
+  if (!mastery.data || !attempts.data || !lessons.data || !exercises.data)
+    return <Loading label="Crunching your numbers" />;
+
+  const lessonRows = [...lessons.data]
+    .sort((a, b) => a.order_index - b.order_index)
+    .map((lesson) => {
+      const own = exercises.data.filter((e) => e.lesson_id === lesson.id);
+      const tries = attempts.data.filter((a) => a.lesson_id === lesson.id);
+      const answered = new Set(tries.map((a) => a.exercise_id));
+      const done = own.filter((e) => answered.has(e.id)).length;
+      const best = new Map<string, number>();
+      for (const t of tries) best.set(t.exercise_id, Math.max(best.get(t.exercise_id) ?? 0, Number(t.score)));
+      const scores = [...best.values()];
+      const avg = scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : 0;
+      return { lesson, total: own.length, done, avg };
+    });
+  const lessonsCompleted = lessonRows.filter((r) => r.total > 0 && r.done === r.total).length;
 
   const dimensionData = DIMENSIONS.map((d) => ({
     name: DIMENSION_LABEL[d],

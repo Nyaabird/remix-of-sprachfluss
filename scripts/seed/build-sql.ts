@@ -1,4 +1,5 @@
-import { existsSync } from "fs";
+import { createHash, existsSync } from "crypto";
+import { existsSync as _exists } from "fs";
 import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -9,11 +10,16 @@ const __dirname = dirname(__filename);
 const ROOT = join(__dirname, "..", "..");
 
 const batches: { file: string; name: string; startOrder: number }[] = [
-  { file: "./a1.ts", name: "expand_a1_curriculum", startOrder: 9 },
+  { file: "./a1.ts", name: "expand_a1_curriculum", startOrder: 1 },
 ];
 
-if (existsSync(join(__dirname, "a2.ts"))) {
-  batches.push({ file: "./a2.ts", name: "expand_a2_curriculum", startOrder: 29 });
+if (_exists(join(__dirname, "a2.ts"))) {
+  batches.push({ file: "./a2.ts", name: "expand_a2_curriculum", startOrder: 21 });
+}
+
+function uuidFor(seed: string): string {
+  const h = createHash("md5").update(`sprachfluss:${seed}`).digest("hex");
+  return `${h.slice(0,8)}-${h.slice(8,12)}-5${h.slice(13,16)}-a${h.slice(17,20)}-${h.slice(20,32)}`;
 }
 
 function escapeSql(value: unknown): string {
@@ -37,7 +43,7 @@ function exerciseRows(lessonId: string, lesson: LessonSeed, baseIndex: number): 
   ) => {
     rows.push(
       `INSERT INTO public.exercises (lesson_id, phase, dimension, skill, type, prompt, content, explanation, order_index) VALUES ` +
-        `(${escapeSql(lessonId)}, ${escapeSql(phase)}, ${escapeSql(dimension)}, ${escapeSql(skill)}, ${escapeSql(type)}, ${escapeSql(prompt)}, ${escapeSql(JSON.stringify(content))}::jsonb, ${escapeSql(explanation)}, ${order}) ON CONFLICT (id) DO NOTHING;`,
+        `(${escapeSql(lessonId)}::uuid, ${escapeSql(phase)}, ${escapeSql(dimension)}, ${escapeSql(skill)}, ${escapeSql(type)}, ${escapeSql(prompt)}, ${escapeSql(JSON.stringify(content))}::jsonb, ${escapeSql(explanation)}, ${order}) ON CONFLICT (id) DO NOTHING;`,
     );
     order += 1;
   };
@@ -192,9 +198,10 @@ async function buildBatch(batch: { file: string; name: string; startOrder: numbe
   let orderIndex = batch.startOrder;
 
   for (const lesson of lessons) {
-    const id = `gen_${batch.name}_${lesson.slug}`;
+    const id = uuidFor(lesson.slug);
     sql += `INSERT INTO public.lessons (id, slug, level, title, title_de, theme, summary, order_index) VALUES `;
-    sql += `(${escapeSql(id)}, ${escapeSql(lesson.slug)}, ${escapeSql(lesson.level)}, ${escapeSql(lesson.title)}, ${escapeSql(lesson.de)}, ${escapeSql(lesson.theme)}, ${escapeSql(lesson.summary)}, ${orderIndex}) ON CONFLICT (slug) DO UPDATE SET level = EXCLUDED.level, title = EXCLUDED.title, title_de = EXCLUDED.title_de, theme = EXCLUDED.theme, summary = EXCLUDED.summary, order_index = EXCLUDED.order_index;\n`;
+    sql += `(${escapeSql(id)}::uuid, ${escapeSql(lesson.slug)}, ${escapeSql(lesson.level)}, ${escapeSql(lesson.title)}, ${escapeSql(lesson.de)}, ${escapeSql(lesson.theme)}, ${escapeSql(lesson.summary)}, ${orderIndex}) ON CONFLICT (slug) DO UPDATE SET level = EXCLUDED.level, title = EXCLUDED.title, title_de = EXCLUDED.title_de, theme = EXCLUDED.theme, summary = EXCLUDED.summary, order_index = EXCLUDED.order_index;\n`;
+    sql += `DELETE FROM public.exercises WHERE lesson_id = ${escapeSql(id)}::uuid;\n`;
     sql += exerciseRows(id, lesson, orderIndex * 100).join("\n");
     sql += "\n\n";
     orderIndex += 1;

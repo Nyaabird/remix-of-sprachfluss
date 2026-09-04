@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import { Loading, RequireAuth } from "@/components/require-auth";
-import { fetchAttempts, fetchMastery } from "@/lib/data";
+import { fetchAttempts, fetchExercises, fetchLessons, fetchMastery } from "@/lib/data";
 import {
   DIMENSIONS,
   DIMENSION_BLURB,

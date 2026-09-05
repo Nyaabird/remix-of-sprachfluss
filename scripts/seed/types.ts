@@ -1,6 +1,6 @@
 export type LessonSeed = {
   slug: string;
-  level: "A1" | "A2";
+  level: "A0" | "A1" | "A2";
   title: string;
   de: string;
   theme: string;

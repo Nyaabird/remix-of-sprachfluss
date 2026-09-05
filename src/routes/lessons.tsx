@@ -9,19 +9,22 @@ import type { Lesson } from "@/lib/learn";
 export const Route = createFileRoute("/lessons")({
   head: () => ({
     meta: [
-      { title: "German lessons A1 & A2 — Sprachfluss" },
+      { title: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         name: "description",
         content:
-          "Browse the Sprachfluss curriculum: 48 guided lessons from everyday survival at A1 to narrating the past and expressing opinions at A2.",
+          "Browse the Sprachfluss curriculum: start with the alphabet, sounds and numbers, then work through everyday A1 German and narrate the past at A2.",
       },
-      { property: "og:title", content: "German lessons A1 & A2 — Sprachfluss" },
+      { property: "og:title", content: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         property: "og:description",
-        content: "48 guided German lessons from greetings and shopping to the Perfekt, Präteritum and subordinate clauses.",
+        content: "46 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+
   component: () => (
     <RequireAuth>
       <Lessons />
@@ -72,6 +75,7 @@ function Lessons() {
   if (!lessons.data || !exercises.data || !attempts.data) return <Loading label="Loading the curriculum" />;
 
   const byLevel = (level: string) => lessons.data.filter((l) => l.level === level).sort((a, b) => a.order_index - b.order_index);
+  const a0 = byLevel("A0");
   const a1 = byLevel("A1");
   const a2 = byLevel("A2");
 
@@ -87,6 +91,17 @@ function Lessons() {
           Work through them in order, or jump to whatever you need today.
         </p>
       </header>
+
+      {a0.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-xs uppercase tracking-[0.22em] text-secondary">Foundation — Alphabet, sounds & numbers</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {a0.map((lesson) => (
+              <LessonCard key={lesson.id} lesson={lesson} own={own(lesson)} done={done(lesson)} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-4">
         <h2 className="text-xs uppercase tracking-[0.22em] text-secondary">A1 — Everyday survival</h2>

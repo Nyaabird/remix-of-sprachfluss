@@ -9,19 +9,22 @@ import type { Lesson } from "@/lib/learn";
 export const Route = createFileRoute("/lessons")({
   head: () => ({
     meta: [
-      { title: "German lessons A1 & A2 — Sprachfluss" },
+      { title: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         name: "description",
         content:
-          "Browse the Sprachfluss curriculum: 48 guided lessons from everyday survival at A1 to narrating the past and expressing opinions at A2.",
+          "Browse the Sprachfluss curriculum: start with the alphabet, sounds and numbers, then work through everyday A1 German and narrate the past at A2.",
       },
-      { property: "og:title", content: "German lessons A1 & A2 — Sprachfluss" },
+      { property: "og:title", content: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         property: "og:description",
-        content: "48 guided German lessons from greetings and shopping to the Perfekt, Präteritum and subordinate clauses.",
+        content: "46 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+
   component: () => (
     <RequireAuth>
       <Lessons />

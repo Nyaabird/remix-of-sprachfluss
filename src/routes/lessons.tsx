@@ -75,6 +75,7 @@ function Lessons() {
   if (!lessons.data || !exercises.data || !attempts.data) return <Loading label="Loading the curriculum" />;
 
   const byLevel = (level: string) => lessons.data.filter((l) => l.level === level).sort((a, b) => a.order_index - b.order_index);
+  const a0 = byLevel("A0");
   const a1 = byLevel("A1");
   const a2 = byLevel("A2");
 
@@ -90,6 +91,17 @@ function Lessons() {
           Work through them in order, or jump to whatever you need today.
         </p>
       </header>
+
+      {a0.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-xs uppercase tracking-[0.22em] text-secondary">Foundation — Alphabet, sounds & numbers</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {a0.map((lesson) => (
+              <LessonCard key={lesson.id} lesson={lesson} own={own(lesson)} done={done(lesson)} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-4">
         <h2 className="text-xs uppercase tracking-[0.22em] text-secondary">A1 — Everyday survival</h2>

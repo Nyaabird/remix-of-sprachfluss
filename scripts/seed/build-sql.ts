@@ -10,11 +10,12 @@ const __dirname = dirname(__filename);
 const ROOT = join(__dirname, "..", "..");
 
 const batches: { file: string; name: string; startOrder: number }[] = [
-  { file: "./a1.ts", name: "expand_a1_curriculum", startOrder: 1 },
+  { file: "./foundation.ts", name: "foundation_curriculum", startOrder: 1 },
+  { file: "./a1.ts", name: "expand_a1_curriculum", startOrder: 7 },
 ];
 
 if (_exists(join(__dirname, "a2.ts"))) {
-  batches.push({ file: "./a2.ts", name: "expand_a2_curriculum", startOrder: 21 });
+  batches.push({ file: "./a2.ts", name: "expand_a2_curriculum", startOrder: 27 });
 }
 
 function uuidFor(seed: string): string {

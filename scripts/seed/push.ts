@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { createHash } from "crypto";
+import { FOUNDATION as foundationLessons } from "./foundation";
 import { A1 as a1Lessons } from "./a1";
 import { A2 as a2Lessons } from "./a2";
 import type { LessonSeed } from "./types";
@@ -94,8 +95,9 @@ function exercises(id: string, l: LessonSeed, base: number) {
 
 async function run() {
   const batches: [LessonSeed[], number][] = [
-    [a1Lessons, 1],
-    [a2Lessons, 21],
+    [foundationLessons, 1],
+    [a1Lessons, 7],
+    [a2Lessons, 27],
   ];
 
   for (const [lessons, start] of batches) {

@@ -1,0 +1,1 @@
+ALTER TYPE public.cefr_level ADD VALUE IF NOT EXISTS 'A0' BEFORE 'A1';

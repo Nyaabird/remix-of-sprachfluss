@@ -272,7 +272,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      cefr_level: "A1" | "A1+" | "A2" | "A2+"
+      cefr_level: "A0" | "A1" | "A1+" | "A2" | "A2+"
       dimension:
         | "phonology"
         | "morphology"
@@ -417,7 +417,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      cefr_level: ["A1", "A1+", "A2", "A2+"],
+      cefr_level: ["A0", "A1", "A1+", "A2", "A2+"],
       dimension: [
         "phonology",
         "morphology",

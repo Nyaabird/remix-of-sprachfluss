@@ -1,14 +1,16 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, Home, LineChart, RotateCcw, User } from "lucide-react";
+import { BookOpen, GraduationCap, Home, LineChart, RotateCcw, User } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/lessons", label: "Lessons", icon: BookOpen },
+  { to: "/quiz-results", label: "Quizzes", icon: GraduationCap },
   { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/review", label: "Review", icon: RotateCcw },
   { to: "/profile", label: "Profile", icon: User },
 ];
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

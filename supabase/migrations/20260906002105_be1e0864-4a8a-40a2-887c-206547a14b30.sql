@@ -1,0 +1,1 @@
+ALTER TYPE public.phase ADD VALUE IF NOT EXISTS 'quiz' AFTER 'feedback';

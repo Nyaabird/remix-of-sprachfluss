@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { FOUNDATION as foundationLessons } from "./foundation";
 import { A1 as a1Lessons } from "./a1";
 import { A2 as a2Lessons } from "./a2";
+import { lessonQuiz, levelQuiz, levelQuizLesson } from "./quiz";
 import type { LessonSeed } from "./types";
 
 const url = process.env["SUPABASE_URL"]!;
@@ -94,13 +95,13 @@ function exercises(id: string, l: LessonSeed, base: number) {
 }
 
 async function run() {
-  const batches: [LessonSeed[], number][] = [
-    [foundationLessons, 1],
-    [a1Lessons, 7],
-    [a2Lessons, 27],
+  const batches: [LessonSeed[], number, "A0" | "A1" | "A2"][] = [
+    [foundationLessons, 1, "A0"],
+    [a1Lessons, 8, "A1"],
+    [a2Lessons, 29, "A2"],
   ];
 
-  for (const [lessons, start] of batches) {
+  for (const [lessons, start, level] of batches) {
     let order = start;
     for (const lesson of lessons) {
       const id = uuidFor(lesson.slug);
@@ -120,10 +121,19 @@ async function run() {
       if (le) throw new Error(`${lesson.slug}: ${le.message}`);
 
       await db.from("exercises").delete().eq("lesson_id", id);
-      const { error: ee } = await db.from("exercises").insert(exercises(id, lesson, order * 100));
+      const rows = [...exercises(id, lesson, order * 100), ...lessonQuiz(id, lesson, order * 100 + 50)];
+      const { error: ee } = await db.from("exercises").insert(rows);
       if (ee) throw new Error(`${lesson.slug} exercises: ${ee.message}`);
       order += 1;
     }
+
+    const quizLesson = levelQuizLesson(level, order);
+    const quizId = uuidFor(quizLesson.slug);
+    const { error: qe } = await db.from("lessons").upsert({ id: quizId, ...quizLesson }, { onConflict: "slug" });
+    if (qe) throw new Error(`${quizLesson.slug}: ${qe.message}`);
+    await db.from("exercises").delete().eq("lesson_id", quizId);
+    const { error: qee } = await db.from("exercises").insert(levelQuiz(quizId, lessons, order * 100));
+    if (qee) throw new Error(`${quizLesson.slug} exercises: ${qee.message}`);
   }
 
   const { count: lc } = await db.from("lessons").select("*", { count: "exact", head: true });

@@ -138,7 +138,7 @@ export function levelQuizLesson(level: "A0" | "A1" | "A2", order: number) {
     A0: {
       title: "Foundation level quiz",
       de: "Test: Grundlagen",
-      summary: "Twelve questions across the alphabet, sounds, numbers and the first grammar rules.",
+      summary: "A mixed test across the alphabet, sounds, numbers and the first grammar rules.",
     },
     A1: {
       title: "A1 level quiz",

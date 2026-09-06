@@ -9,7 +9,7 @@ export const SKILLS = ["listening", "speaking", "reading", "writing"] as const;
 
 export type Dimension = (typeof DIMENSIONS)[number];
 export type Skill = (typeof SKILLS)[number];
-export type Phase = "input" | "output" | "feedback";
+export type Phase = "input" | "output" | "feedback" | "quiz";
 export type ExerciseType =
   | "audio_dialogue"
   | "reading_passage"
@@ -47,12 +47,14 @@ export const PHASE_LABEL: Record<Phase, string> = {
   input: "Input",
   output: "Output",
   feedback: "Feedback",
+  quiz: "Quiz",
 };
 
 export const PHASE_BLURB: Record<Phase, string> = {
   input: "Listen and read",
   output: "Speak and write",
   feedback: "Review and fix",
+  quiz: "Test yourself",
 };
 
 export type Lesson = {

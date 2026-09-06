@@ -18,7 +18,7 @@ export const Route = createFileRoute("/lessons")({
       { property: "og:title", content: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         property: "og:description",
-        content: "46 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
+        content: "49 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -43,7 +43,7 @@ function LessonCard({ lesson, own, done }: { lesson: Lesson; own: { id: string }
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[11px] uppercase tracking-[0.18em] text-primary/80">
-            Lektion {lesson.order_index} · {lesson.level}
+            {lesson.theme === "quiz" ? "Level quiz" : `Lektion ${lesson.order_index}`} · {lesson.level}
           </p>
           <h2 className="mt-2 font-serif text-xl text-cream">{lesson.title}</h2>
           <p className="font-serif text-sm text-secondary">{lesson.title_de}</p>

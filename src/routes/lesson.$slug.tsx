@@ -16,7 +16,7 @@ import {
 } from "@/lib/learn";
 import { useAuth } from "@/lib/use-auth";
 
-const PHASES: Phase[] = ["input", "output", "feedback"];
+const PHASES: Phase[] = ["input", "output", "feedback", "quiz"];
 
 export const Route = createFileRoute("/lesson/$slug")({
   head: () => ({
@@ -151,7 +151,7 @@ function LessonView() {
       </header>
 
       <div className="surface flex items-stretch gap-2 rounded-2xl p-2">
-        {PHASES.map((phase) => {
+        {PHASES.filter((phase) => list.some((e) => e.phase === phase)).map((phase) => {
           const active = current.phase === phase;
           const passed = PHASES.indexOf(phase) < PHASES.indexOf(current.phase);
           return (

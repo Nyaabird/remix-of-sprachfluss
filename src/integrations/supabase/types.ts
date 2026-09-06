@@ -288,7 +288,7 @@ export type Database = {
         | "vocab_match"
         | "pragmatics_choice"
         | "writing_prompt"
-      phase: "input" | "output" | "feedback"
+      phase: "input" | "output" | "feedback" | "quiz"
       skill: "listening" | "speaking" | "reading" | "writing"
     }
     CompositeTypes: {
@@ -435,7 +435,7 @@ export const Constants = {
         "pragmatics_choice",
         "writing_prompt",
       ],
-      phase: ["input", "output", "feedback"],
+      phase: ["input", "output", "feedback", "quiz"],
       skill: ["listening", "speaking", "reading", "writing"],
     },
   },

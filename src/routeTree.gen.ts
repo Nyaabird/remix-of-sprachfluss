@@ -16,6 +16,7 @@ import { Route as LessonsRouteImport } from './routes/lessons'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as QuizResultsRouteImport } from './routes/quiz-results'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as LessonSlugRouteImport } from './routes/lesson.$slug'
 
@@ -54,6 +55,11 @@ const ProgressRoute = ProgressRouteImport.update({
   path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizResultsRoute = QuizResultsRouteImport.update({
+  id: '/quiz-results',
+  path: '/quiz-results',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
+  '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/progress'
+    | '/quiz-results'
     | '/review'
     | '/lesson/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/progress'
+    | '/quiz-results'
     | '/review'
     | '/lesson/$slug'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/profile'
     | '/progress'
+    | '/quiz-results'
     | '/review'
     | '/lesson/$slug'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
+  QuizResultsRoute: typeof QuizResultsRoute
   ReviewRoute: typeof ReviewRoute
   LessonSlugRoute: typeof LessonSlugRoute
 }
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz-results': {
+      id: '/quiz-results'
+      path: '/quiz-results'
+      fullPath: '/quiz-results'
+      preLoaderRoute: typeof QuizResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
+  QuizResultsRoute: QuizResultsRoute,
   ReviewRoute: ReviewRoute,
   LessonSlugRoute: LessonSlugRoute,
 }

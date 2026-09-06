@@ -18,7 +18,7 @@ export const Route = createFileRoute("/lessons")({
       { property: "og:title", content: "German lessons: Foundation, A1 & A2 — Sprachfluss" },
       {
         property: "og:description",
-        content: "46 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
+        content: "49 guided German lessons from the alphabet and numbers to the Perfekt, Präteritum and subordinate clauses.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

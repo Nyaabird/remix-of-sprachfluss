@@ -18,6 +18,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as QuizResultsRouteImport } from './routes/quiz-results'
 import { Route as ReviewRouteImport } from './routes/review'
+import { Route as VocabularyRouteImport } from './routes/vocabulary'
 import { Route as LessonSlugRouteImport } from './routes/lesson.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -65,6 +66,11 @@ const ReviewRoute = ReviewRouteImport.update({
   path: '/review',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VocabularyRoute = VocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LessonSlugRoute = LessonSlugRouteImport.update({
   id: '/lesson/$slug',
   path: '/lesson/$slug',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
+  '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
+  '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
   '/review': typeof ReviewRoute
+  '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz-results'
     | '/review'
+    | '/vocabulary'
     | '/lesson/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz-results'
     | '/review'
+    | '/vocabulary'
     | '/lesson/$slug'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/quiz-results'
     | '/review'
+    | '/vocabulary'
     | '/lesson/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   QuizResultsRoute: typeof QuizResultsRoute
   ReviewRoute: typeof ReviewRoute
+  VocabularyRoute: typeof VocabularyRoute
   LessonSlugRoute: typeof LessonSlugRoute
 }
 
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vocabulary': {
+      id: '/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/vocabulary'
+      preLoaderRoute: typeof VocabularyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lesson/$slug': {
       id: '/lesson/$slug'
       path: '/lesson/$slug'
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   QuizResultsRoute: QuizResultsRoute,
   ReviewRoute: ReviewRoute,
+  VocabularyRoute: VocabularyRoute,
   LessonSlugRoute: LessonSlugRoute,
 }
 export const routeTree = rootRouteImport

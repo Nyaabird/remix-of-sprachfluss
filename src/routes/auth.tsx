@@ -29,11 +29,31 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "reset">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+
+  async function resetPassword() {
+    if (!email) {
+      toast.error("Enter your email address first.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Check your inbox for a password reset link.");
+      setMode("signin");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/dashboard" });
@@ -41,6 +61,10 @@ function AuthPage() {
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (mode === "reset") {
+      await resetPassword();
+      return;
+    }
     setBusy(true);
     try {
       if (mode === "signup") {
@@ -86,7 +110,11 @@ function AuthPage() {
             Sprach<span className="text-primary">fluss</span>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "signin" ? "Welcome back to your German practice." : "Begin your German A1 journey."}
+            {mode === "signin"
+              ? "Welcome back to your German practice."
+              : mode === "signup"
+                ? "Begin your German A1 journey."
+                : "We'll email you a link to reset your password."}
           </p>
         </div>
 
@@ -115,42 +143,64 @@ function AuthPage() {
               className="bg-background/40"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="bg-background/40"
-            />
-          </div>
+          {mode !== "reset" && (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="bg-background/40"
+              />
+            </div>
+          )}
 
           <Button type="submit" disabled={busy} className="w-full rounded-xl">
-            {busy ? "One moment…" : mode === "signin" ? "Sign in" : "Create account"}
+            {busy
+              ? "One moment…"
+              : mode === "signin"
+                ? "Sign in"
+                : mode === "signup"
+                  ? "Create account"
+                  : "Send reset link"}
           </Button>
 
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            or
-            <span className="h-px flex-1 bg-border" />
-          </div>
+          {mode === "signin" && (
+            <button
+              type="button"
+              className="w-full text-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              onClick={() => setMode("reset")}
+            >
+              Forgot your password?
+            </button>
+          )}
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={google}
-            className="w-full rounded-xl border-border bg-transparent hover:bg-muted"
-          >
-            Continue with Google
-          </Button>
+          {mode !== "reset" && (
+            <>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <span className="h-px flex-1 bg-border" />
+                or
+                <span className="h-px flex-1 bg-border" />
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={google}
+                className="w-full rounded-xl border-border bg-transparent hover:bg-muted"
+              >
+                Continue with Google
+              </Button>
+            </>
+          )}
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          {mode === "signin" ? "New to Sprachfluss?" : "Already have an account?"}{" "}
+          {mode === "signin" ? "New to Sprachfluss?" : "Back to sign in?"}{" "}
           <button
             type="button"
             className="text-primary underline-offset-4 hover:underline"

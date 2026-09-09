@@ -110,7 +110,11 @@ function AuthPage() {
             Sprach<span className="text-primary">fluss</span>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "signin" ? "Welcome back to your German practice." : "Begin your German A1 journey."}
+            {mode === "signin"
+              ? "Welcome back to your German practice."
+              : mode === "signup"
+                ? "Begin your German A1 journey."
+                : "We'll email you a link to reset your password."}
           </p>
         </div>
 

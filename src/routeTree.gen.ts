@@ -17,6 +17,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as QuizResultsRouteImport } from './routes/quiz-results'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as VocabularyRouteImport } from './routes/vocabulary'
 import { Route as LessonSlugRouteImport } from './routes/lesson.$slug'
@@ -61,6 +62,11 @@ const QuizResultsRoute = QuizResultsRouteImport.update({
   path: '/quiz-results',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/quiz-results': typeof QuizResultsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/vocabulary': typeof VocabularyRoute
   '/lesson/$slug': typeof LessonSlugRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/quiz-results'
+    | '/reset-password'
     | '/review'
     | '/vocabulary'
     | '/lesson/$slug'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/quiz-results'
+    | '/reset-password'
     | '/review'
     | '/vocabulary'
     | '/lesson/$slug'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/quiz-results'
+    | '/reset-password'
     | '/review'
     | '/vocabulary'
     | '/lesson/$slug'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   QuizResultsRoute: typeof QuizResultsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ReviewRoute: typeof ReviewRoute
   VocabularyRoute: typeof VocabularyRoute
   LessonSlugRoute: typeof LessonSlugRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   QuizResultsRoute: QuizResultsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ReviewRoute: ReviewRoute,
   VocabularyRoute: VocabularyRoute,
   LessonSlugRoute: LessonSlugRoute,

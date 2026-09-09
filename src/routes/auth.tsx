@@ -61,6 +61,10 @@ function AuthPage() {
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (mode === "reset") {
+      await resetPassword();
+      return;
+    }
     setBusy(true);
     try {
       if (mode === "signup") {

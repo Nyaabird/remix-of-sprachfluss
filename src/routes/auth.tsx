@@ -200,7 +200,7 @@ function AuthPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          {mode === "signin" ? "New to Sprachfluss?" : "Already have an account?"}{" "}
+          {mode === "signin" ? "New to Sprachfluss?" : "Back to sign in?"}{" "}
           <button
             type="button"
             className="text-primary underline-offset-4 hover:underline"

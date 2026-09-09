@@ -1,10 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, GraduationCap, Home, LineChart, RotateCcw, User } from "lucide-react";
+import { BookOpen, GraduationCap, Home, LineChart, RotateCcw, Languages, User } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/dashboard", label: "Home", icon: Home },
   { to: "/lessons", label: "Lessons", icon: BookOpen },
+  { to: "/vocabulary", label: "Words", icon: Languages },
   { to: "/quiz-results", label: "Quizzes", icon: GraduationCap },
   { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/review", label: "Review", icon: RotateCcw },
